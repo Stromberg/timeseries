@@ -31,8 +31,6 @@ func FromCsv(in string, config *CsvConfig) (res *TimeArray, err error) {
 		return
 	}
 
-	fmt.Println(raw)
-
 	values := make(map[string][]interface{}, 0)
 	var timestamp []interface{}
 	rowsRaw := raw[1:len(raw)]
