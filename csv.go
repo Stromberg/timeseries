@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"strings"
+	"github.com/dimchansky/utfbom"
 )
 
 type CsvConfig struct {
@@ -22,7 +23,7 @@ func NewCsvConfig(timestamp string) *CsvConfig {
 }
 
 func FromCsv(in string, config *CsvConfig) (res *TimeArray, err error) {
-	r := csv.NewReader(strings.NewReader(in))
+	r := csv.NewReader(utfbom.SkipOnly(strings.NewReader(in)))
 	r.Comma = config.Comma
 	r.LazyQuotes = true
 
