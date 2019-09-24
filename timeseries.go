@@ -51,3 +51,37 @@ func (ta *TimeArray) Rename(oldName, newName string) bool {
 	delete(ta.values, oldName)
 	return true
 }
+
+func (ta *TimeArray) RemoveIndices(indices []int) *TimeArray {
+	ts := ta.removeIndices(indices, ta.timestamp)
+	values := map[string][]interface{}{}
+
+	for k, v := range ta.values {
+		values[k] = ta.removeIndices(indices, v)
+	}
+
+	return FromData(ts, values)
+}
+
+func (ta *TimeArray) ChangeTimeStamp(oldTs, newTs interface{}) {
+	for i, v := range ta.timestamp {
+		if v == oldTs {
+			ta.timestamp[i] = newTs
+			return
+		}
+	}
+}
+func (ta *TimeArray) removeIndices(indices []int, s []interface{}) []interface{} {
+	res := []interface{}{}
+
+	pi := 0
+	for i, v := range s {
+		if pi >= len(indices) || i < indices[pi] {
+			res = append(res, v)
+		} else if i == indices[pi] {
+			pi++
+		}
+	}
+
+	return res
+}
